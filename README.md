@@ -1,6 +1,7 @@
 # Changing device tree and compiling Kernel for Nvidia Jetson Xavier NX
 [reference](https://medium.com/@haoye94/editing-device-tree-and-compiling-kernel-for-nvidia-jetson-xavier-nx-11a1df20939c)
 
+## Working directory
 * Go to `/home/USER/projects` and create a folder to store all related files for the project.
   ```BASH
   cd $HOME/projects
@@ -16,7 +17,7 @@
 ## Compiler
 On the host machine which is most likely an x86 architecture, we need to download the corresponding compiler and set it up for cross-compilation.  
 NVIDIA recommends using the `Linaro 7.3.1 2018.05` toolchain for this. Download the pre-built toolchain binaries [here](http://releases.linaro.org/components/toolchain/binaries/7.3-2018.05/aarch64-linux-gnu/gcc-linaro-7.3.1-2018.05-x86_64_aarch64-linux-gnu.tar.xz), follow the next steps:[Reference](https://developer.ridgerun.com/wiki/index.php?title=Jetson_Nano/Development/Building_the_Kernel_from_Source)
-* Go to `changing-device-tree-compiling-kernel` and download the compiler.
+* Go to the *working directory* (`changing-device-tree-compiling-kernel`) and download the compiler.
   ```BASH
   cd changing-device-tree-compiling-kernel
   wget http://releases.linaro.org/components/toolchain/binaries/7.3-2018.05/aarch64-linux-gnu/gcc-linaro-7.3.1-2018.05-x86_64_aarch64-linux-gnu.tar.xz
@@ -27,9 +28,9 @@ NVIDIA recommends using the `Linaro 7.3.1 2018.05` toolchain for this. Download 
   tar -xvf gcc-linaro-7.3.1-2018.05-x86_64_aarch64-linux-gnu.tar.xz -C l4t-gcc/
   ```
 ## NVIDIA files
-Go to [Jetson Linux Archive](https://developer.nvidia.com/embedded/jetson-linux-archive) and find the proper version, then click to go to the downloaded page. There, download `Linux for Tegra BSP`, `BSP sources` and `sample root file system (RFS)`.
+Go to [Jetson Linux Archive](https://developer.nvidia.com/embedded/jetson-linux-archive) and find the proper version, then click to go to the downloaded page. There, download *Linux for Tegra BSP*, *BSP sources* and *sample root file system (RFS)*.
 ![files](./img/files.png)  
-  *Note: Download the tree files inside folder `changing-device-tree-compiling-kernel/`*
+  **Note:** Download the tree files inside the *working directory*
   Download the files with the cli, doing right click and copying the link to download, as example is downloaded Jetson Linux 35.1
   ```BASH
   cd $HOME/projects/changing-device-tree-compiling-kernel/
@@ -59,16 +60,16 @@ In the *public_sources.tbz2* (BSP sources zip file), there will be many other zi
   sudo tar -xvpf Linux_for_Tegra/source/public/kernel_src.tbz2 -C Linux_for_Tegra/source/
   ```
 Create `extlinux.conf`
-*  create a directory called `extlinux/` in `Linux_for_Tegra/rootfs/boot/` and create `extlinux.conf`
+*  Create a directory called `extlinux/` in `Linux_for_Tegra/rootfs/boot/` and create `extlinux.conf`
   ```BASH
   sudo mkdir Linux_for_Tegra/rootfs/boot/extlinux/
   sudo touch Linux_for_Tegra/rootfs/boot/extlinux/extlinux.conf
   ```
-* Open `extlinux.conf` and copy the next content.
+* Open `extlinux.conf`
   ```BASH
   sudo vim touch Linux_for_Tegra/rootfs/boot/extlinux/extlinux.conf 
   ```
-  content:   
+* Copy the next content:
   ```BASH
   TIMEOUT 30
   DEFAULT primary
@@ -79,6 +80,7 @@ Create `extlinux.conf`
   INITRD /boot/initrd
   APPEND ${cbootargs} root=/dev/mmcblk1p1 rw rootwait rootfstype=ext4 console=ttyS0,115200n8 console=tty0 fbcon=map:0 net.ifnames=0
   ```
+* Close and save tipying: `:wq`
 ## Change Pinmux
 If the pin functions defer from dev kit, changes to pinmux are most likely required. This step can only be done on windows since it makes use of Excel Macros
 
@@ -87,7 +89,7 @@ Editing the excel file is pretty straightforward, edit the orange area.
 ![excel-edit](./img/pinmux-1.png)
 Once done with your changes, click on the “Generate DT File” button, give your board a name. and you should see 3 files generated in the same folder.
 ![excel-edit2](./img/pinmux-2.png)
-There should be 3 files generated in the same folder. Copy these files to your Ubuntu machine in the folder `changing-device-tree-compiling-kernel`. 
+There should be 3 files generated in the same folder. Copy these files to your Ubuntu machine in the *working directory*.
 ![excel-edit3](./img/pinmux-3.png)
 ## Generate .cfg files
 The script to generate from .dtsi to .cfg files are located in: `Linux_for_Tegra/kernel/pinmux/t19x/ pinmux-dts2cfg.py`
@@ -102,7 +104,7 @@ The script to generate from .dtsi to .cfg files are located in: `Linux_for_Tegra
   python pinmux-dts2cfg.py --pad pad_info.txt tegra19x-jetson_xavier_nx_module-padvoltage-default.dtsi  1.0 > tegra19x-mb1-padvoltage-p3668-a01.cfg
   ```
 Note: on the first execution of `pinmux-dts2cfg.py` would be a warning, but if the `tegra19x-mb1-pinmux-p3668-a01.cfg` is generated, is all fine. Example of the warning:
-
+  ![imagee](./img/warning.jpeg)
 Replace the files `*.cfg` generated in `Linux_for_Tegra/bootloader/t186ref/BCT/`
 * Rename the files `*.cfg`
   ```BASH
@@ -124,7 +126,7 @@ Replace the files `*.cfg` generated in `Linux_for_Tegra/bootloader/t186ref/BCT/`
   mv tegra19x-mb1-pinmux-p3668-a01.cfg.new tegra19x-mb1-pinmux-p3668-a01.cfg
   ```
 ## Build kernel and device tree
-Return to the working directory
+Return to the *working directory*
   ```BASH
   cd ../../../../
   ```
@@ -135,17 +137,30 @@ Edit the file `nvcommon_build.sh`, at line 29, erase the word `-buildroot`
   sudo vim Linux_for_Tegra/source/nvcommon_build.sh
   ```
 * Press `i` and erase the word
-  ![imagee]()
-* Pres `Esc` and write `:wq` to save the changes
+  - Before erasing:
+    ![imagee](./img/edit1.jpeg)
+  - After erasing:
+    ![imagee](./img/edit2.jpeg)
+* Pres `Esc` and write `:wq` to save the changes  
+  
 Set environment variable for compiler path:
+* Execute the next command:
   ```BASH
   export CROSS_COMPILE_AARCH64_PATH="/home/lubuntu/Projects/Change_Device_Tree_Jetson/l4t-gcc/gcc-linaro-7.3.1-2018.05-x86_64_aarch64-linux-gnu"
   ```
+* To verify the environment variable, execute:
+  ```BASH
+  $CROSS_COMPILE_AARCH64_PATH
+  ```
+  Example of output
+  ![image]()
   *Note: the full path to the folder `gcc-linaro-7.3.1-2018.05-x86_64_aarch64-linux-gnu` in the export variable may vary on your computer.*
+  
 Build the kernel
   ```BASH
   ./Linux_for_Tegra/source/nvbuild.sh -o ~/Projects/Change_Device_Tree_Jetson/kernel_out/
   ```
+  *This process would take a while, around an hour.*
 ## Replace .dtb files
 
 
