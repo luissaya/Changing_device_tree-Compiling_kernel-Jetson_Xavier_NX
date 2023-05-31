@@ -153,7 +153,7 @@ Set environment variable for compiler path:
   $CROSS_COMPILE_AARCH64_PATH
   ```
   Example of output
-  ![image]()
+  ![image](./img/variable.png)
   *Note: the full path to the folder `gcc-linaro-7.3.1-2018.05-x86_64_aarch64-linux-gnu` in the export variable may vary on your computer.*
   
 Build the kernel
@@ -162,6 +162,10 @@ Build the kernel
   ```
   *This process would take a while, around an hour.*
 ## Replace .dtb files
-
+Copy `tegra194-p3668-all-p3509–0000.dtb` from `/kernel_out/arch/arm64/boot/dts` to the working directory
+```BASH
+cp kernel_out/arch/arm64/boot/dts/tegra194-p3668-all-p3509–0000.dtb .
+```
+This file must replace the original one previous the flash process of the Jetson in the directory `Linux_for_Tegra/kernel/dtb/`
 
 ## Flash device tree
