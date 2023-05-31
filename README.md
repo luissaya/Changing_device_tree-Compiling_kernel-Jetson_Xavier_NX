@@ -6,7 +6,7 @@
   cd $HOME/projects
   mkdir changing-device-tree-compiling-kernel
   ```
-## Requirement
+## Prerequisites
   ```BASH
   sudo apt install libssl-dev
   sudo apt-get install flex
@@ -28,9 +28,9 @@ NVIDIA recommends using the `Linaro 7.3.1 2018.05` toolchain for this. Download 
   ```
 ## NVIDIA files
 Go to [Jetson Linux Archive](https://developer.nvidia.com/embedded/jetson-linux-archive) and find the proper version, then click to go to the downloaded page. There, download `Linux for Tegra BSP`, `BSP sources` and `sample root file system (RFS)`.
-![files](./img/files.png)
+![files](./img/files.png)  
   *Note: Download the tree files inside folder `changing-device-tree-compiling-kernel/`*
-  Download the files with the cli, doing right click and copying the link to download, as exmaple it is downloaded Jetson Linux 5.0.1
+  Download the files with the cli, doing right click and copying the link to download, as example is downloaded Jetson Linux 35.1
   ```BASH
   cd $HOME/projects/changing-device-tree-compiling-kernel/
   wget https://developer.nvidia.com/embedded/l4t/r35_release_v1.0/release/jetson_linux_r35.1.0_aarch64.tbz2
