@@ -168,4 +168,4 @@ cp kernel_out/arch/arm64/boot/dts/tegra194-p3668-all-p3509–0000.dtb .
 ```
 This file must replace the original one previous the flash process of the Jetson in the directory `Linux_for_Tegra/kernel/dtb/`
 
-## Flash device tree
+<!-- ## Flash device tree -->
